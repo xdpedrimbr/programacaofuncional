@@ -438,6 +438,25 @@ catch [x] = [x]
 catch (x : y : zs)
   | x > y = y : catch (x : zs)
   | otherwise = x : catch (y : zs)
+  
+--c:
+msg :: Mensagem -> Mensagem -> Bool
+msg (Msg _ _ d1 h1 _) (Msg _ _ d2 h2 _)
+  | d1 == d2 = (minpass h1) < (minpass h2)
+  | otherwise = precede d1 d2
+
+ordenaDataHora :: [Mensagem] -> [Mensagem]
+ordenaDataHora [] = []
+ordenaDataHora (piv : xs) =
+  (ordenaDataHora [x | x <- xs, (msg x piv) == False])
+    ++ [piv]
+    ++ (ordenaDataHora [x | x <- xs, (msg x piv) == True])
+	
+--d:
+last :: Contato -> [Mensagem] -> [Mensagem]
+last cont msgs = take 2 [(Msg c m d h a) | (Msg c m d h a) <- msgOrd, c == cont]
+  where
+    msgOrd = ordenaDataHora msgs
 
 --EX9:
 data ArvBinInt
